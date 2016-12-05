@@ -3,8 +3,8 @@ WX-CONFIG_CXXFLAGS	= -I../include $(shell wx-config --cxxflags)
 WX-CONFIG_LIBS		= $(shell wx-config --libs)
 
 
-PROGRAM	= ChopperCtrl.exe
-OBJECTS	= main.o chopper_ctrl.o
+PROGRAM	= wxwsample.exe
+OBJECTS	= main.o simple.o
 
 # implementation
 
