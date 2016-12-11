@@ -1,6 +1,6 @@
 
-#include "Main.h"
-#include "Simple.h"
+#include "main.h"
+#include "simple.h"
 
 IMPLEMENT_APP(MyApp)
 

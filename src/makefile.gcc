@@ -1,19 +1,22 @@
 BINDIR = ../bin
 OBJDIR = ../build
-INCDIR = ../../../include
-LIBDIR = ../../../lib/gcc
-LIBSRCDIR = ../../../src
+INCDIR = ../include
 
-CC  = gcc
-CXX = g++
-CFLAGS  = -g -MMD -MP
+CXX = $(shell wx-config --cxx)
+WX-CONFIG_CXXFLAGS	= $(shell wx-config --cxxflags)
+WX-CONFIG_LIBS		= $(shell wx-config --libs)
+
+# CC  = gcc
+# CXX = g++
+# CFLAGS  = -g -MMD -MP
+CXXFLAGS  = -g -MMD -MP  $(WX-CONFIG_CXXFLAGS)
 LDFLAGS = 
-INCLUDE = -I$(INCDIR) `pkg-config libusb-1.0 --cflags`
+INCLUDE = -I$(INCDIR)
 
-LIBOBJS = $(LIBDIR)/libtbi.a
-LIBS = $(LIBOBJS) `pkg-config libusb-1.0 libudev --libs` -lrt -lpthread 
+LIBOBJS =
+LIBS = $(LIBOBJS) $(WX-CONFIG_LIBS)
 
-TARGET = $(BINDIR)/basicdemo
+TARGET = $(BINDIR)/wxsample
 CPP_SOURCES = $(wildcard *.cpp) 
 
 OBJECTS	= $(addprefix $(OBJDIR)/, $(CPP_SOURCES:.cpp=.o)) $(addprefix $(OBJDIR)/, $(C_SOURCES:.c=.o))
@@ -35,11 +38,7 @@ $(TARGET): $(OBJECTS) $(LIBOBJS)
 
 $(OBJDIR)/%.o : %.cpp 
 	@[ -d $(OBJDIR) ] || mkdir -p $(OBJDIR)	
-	$(CXX) $(CFLAGS) $(INCLUDE) -o $@ -c $<
-
-$(OBJDIR)/%.o : %.c
-	@[ -d $(OBJDIR)/HIDAPI/linux/ ] || mkdir -p $(OBJDIR)/HIDAPI/linux
-	$(CC) $(CFLAGS) $(INCLUDE) -o $@ -c $<
+	$(CXX) $(CXXFLAGS) $(INCLUDE) -o $@ -c $<
 
 clean:
 	$(RM) $(OBJECTS) $(TARGET) $(DEPENDS)
