@@ -8,19 +8,18 @@ WX-CONFIG_LIBS		= $(shell wx-config --libs)
 
 # CC = gcc
 # CXX = g++
-CFLAGS  = -g -MMD -MP
+CXXFLAGS  = -g -MMD -MP $(WX-CONFIG_CXXFLAGS)
 LDFLAGS =
 INCLUDE = -I$(INCDIR)
 
 LIBOBJS =
-LIBS = $(LIBOBJS)
+LIBS = $(LIBOBJS) $(WX-CONFIG_LIBS)
 
 TARGET = $(BINDIR)/wxwsample
 CPP_SOURCES = $(wildcard *.cpp)
 
 OBJECTS	= $(addprefix $(OBJDIR)/, $(CPP_SOURCES:.cpp=.o)) $(addprefix $(OBJDIR)/, $(C_SOURCES:.c=.o))
 DEPENDS = $(OBJECTS:.o=.d)
-
 
 
 # implementation
@@ -34,15 +33,12 @@ FORCE:
 
 $(TARGET): $(OBJECTS)
 	@[ -d $(BINDIR) ] || mkdir -p $(BINDIR)
-	$(CXX) -o $@ $(OBJECTS) $(LDFLAGS) $(LIBS) $(WX-CONFIG_LIBS)
+	$(CXX) -o $@ $(OBJECTS) $(LDFLAGS) $(LIBS)
 	SetFile -t APPL $(TARGET)
 
 $(OBJDIR)/%.o : %.cpp
 	@[ -d $(OBJDIR) ] || mkdir -p $(OBJDIR)
-	$(CXX) -c $(CFLAGS) $(INCLUDE) $(WX-CONFIG_CXXFLAGS) -o $@ -c $<
-
-$(OBJDIR)/%.o : %.c
-	$(CC) $(CFLAGS) $(INCLUDE) -o $@ -c $<
+	$(CXX) -c $(CXXFLAGS) $(INCLUDE) -o $@ -c $<
 
 clean:
 	$(RM) $(OBJECTS) $(TARGET) $(DEPENDS)
